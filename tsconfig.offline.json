@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "outDir": ".offline-build",
+    "rootDir": ".",
+    "jsx": "react",
+    "sourceMap": false,
+    "declaration": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["**/*.test.ts"]
+}

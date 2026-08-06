@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.offline-build/
+.flagbuild/
+.DS_Store
+*.log

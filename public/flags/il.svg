@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="243.49867"
+   height="173.85867"
+   viewBox="0 0 243.49867 173.85867"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath2">
+      <path
+         d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+         id="path2" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4">
+      <path
+         d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+         id="path4" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath6">
+      <path
+         d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+         id="path6" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath8">
+      <path
+         d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+         id="path8" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath10">
+      <path
+         d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+         id="path10" />
+    </clipPath>
+  </defs>
+  <g
+     id="g1">
+    <path
+       id="path1"
+       d="M -89.65277,-65.19768 V 65.1977 H 89.65277 V -65.19768 Z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,119.536,86.929333)"
+       clip-path="url(#clipPath2)" />
+    <path
+       id="path3"
+       d="m -89.65277,-52.96913 v 20.37427 H 89.65277 v -20.37427 z"
+       style="fill:#0038b8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,119.536,86.929333)"
+       clip-path="url(#clipPath4)" />
+    <path
+       id="path5"
+       d="M -89.65277,32.59486 V 52.96913 H 89.65277 V 32.59486 Z"
+       style="fill:#0038b8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,119.536,86.929333)"
+       clip-path="url(#clipPath6)" />
+    <path
+       id="path7"
+       d="M 0,28.1141 -24.34758,-14.05705 H 24.34758 M 0,19.15459 -16.58841,-9.57729 h 33.17682"
+       style="fill:#0038b8;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,119.536,86.929333)"
+       clip-path="url(#clipPath8)" />
+    <path
+       id="path9"
+       d="M 24.34758,14.05705 H -24.34758 L 0,-28.1141 M 16.58841,9.57729 H -16.58841 L 0,-19.15459"
+       style="fill:#0038b8;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,119.536,86.929333)"
+       clip-path="url(#clipPath10)" />
+  </g>
+</svg>

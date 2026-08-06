@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="282.62534"
+   height="173.85867"
+   viewBox="0 0 282.62534 173.85867"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath2">
+      <path
+         d="M -104.32564,-65.19768 V 65.1977 H 104.32565 V -65.19768 Z"
+         transform="translate(-2.5000001e-6)"
+         id="path2" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4">
+      <path
+         d="M -104.32564,-65.19768 V 65.1977 H 104.32565 V -65.19768 Z"
+         transform="translate(-2.5000001e-6)"
+         id="path4" />
+    </clipPath>
+  </defs>
+  <g
+     id="g1">
+    <path
+       id="path1"
+       d="M -104.32564,-65.19768 V 65.1977 H 104.32565 V -65.19768 Z"
+       style="fill:#418fde;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,139.09867,86.929333)"
+       clip-path="url(#clipPath2)" />
+    <path
+       id="path3"
+       d="m 26.0783,0 c 0,21.60509 -17.51392,39.119 -39.11901,39.119 -21.60509,0 -39.119,-17.51391 -39.119,-39.119 0,-21.60509 17.51391,-39.119 39.119,-39.119 21.60509,0 39.11901,17.51391 39.11901,39.119 z"
+       style="fill:#f7ea48;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(1.3333333,0,0,-1.3333333,139.09867,86.929333)"
+       clip-path="url(#clipPath4)" />
+  </g>
+</svg>
