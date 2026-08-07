@@ -24,6 +24,8 @@ export function normalizeAnswer(value: string): string {
   return (value || "")
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[øØ]/g, "o")
+    .replace(/[æÆ]/g, "ae")
     .replace(/[‐‑‒–—―]/g, "-")
     .replace(/[.’'`]/g, "")
     .replace(/\./g, "")
