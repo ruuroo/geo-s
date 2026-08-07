@@ -90,6 +90,7 @@ function canonicalAnswer(country: Country, type: AnswerType): string {
 function formatMode(mode: GameMode): string {
   return ({
     flag: "Flagg",
+    map: "Kart",
     capitals: "Hovedsteder",
     "flag-capital": "Flagg til hovedstad",
     combined: "Kombinert – todelt",
@@ -107,6 +108,7 @@ function formatTime(seconds: number): string {
 function modeDescription(mode: GameMode): string {
   return ({
     flag: "Se et flagg og finn landet.",
+    map: "Se landets form og finn landet.",
     capitals: "Se et land og finn hovedstaden.",
     "flag-capital": "Se flagget og finn hovedstaden.",
     combined: "Finn først landet, deretter hovedstaden.",
@@ -137,10 +139,10 @@ function WorldMap(props: { countries: Country[]; selected: Country; compact?: bo
   );
 }
 
-function Silhouette(props: { country: Country; small?: boolean }) {
-  const { country, small } = props;
+function Silhouette(props: { country: Country; small?: boolean; concealName?: boolean }) {
+  const { country, small, concealName } = props;
   return (
-    <svg className={small ? "silhouette small" : "silhouette"} viewBox="0 0 420 260" role="img" aria-label={`Silhuett av ${country.norwegianName}`}>
+    <svg className={small ? "silhouette small" : "silhouette"} viewBox="0 0 420 260" role="img" aria-label={concealName ? "Landform som skal identifiseres" : `Silhuett av ${country.norwegianName}`}>
       {country.shapePath
         ? <path d={country.shapePath} fillRule="evenodd" />
         : <g><circle cx="210" cy="126" r="54" /><path d="M210 40L225 88L275 88L234 117L250 165L210 136L170 165L186 117L145 88L195 88Z" className="tiny-star" /></g>}
@@ -267,15 +269,16 @@ class App extends React.Component<any, AppState> {
 
   availablePool = (): Country[] => filterCountryPool(this.state.countries, this.state.settings);
 
-  selectedRoundCount = (poolLength: number): number => {
-    const { roundLength, customLength, avoidRepeats } = this.state.settings;
+  selectedRoundCount = (poolLength: number, settings: GameSettings = this.state.settings): number => {
+    const { roundLength, customLength, avoidRepeats } = settings;
     if (roundLength === "all") return poolLength;
     const chosen = roundLength === 0 ? customLength : roundLength;
     return avoidRepeats ? Math.min(Math.max(1, chosen), poolLength) : Math.max(1, chosen);
   };
 
-  startGame = (onlyCountryIds?: string[], forceMode?: GameMode) => {
-    const settings = forceMode ? { ...this.state.settings, mode: forceMode } : this.state.settings;
+  startGame = (onlyCountryIds?: string[], forceMode?: GameMode, settingsOverride?: GameSettings) => {
+    const baseSettings = settingsOverride || this.state.settings;
+    const settings = forceMode ? { ...baseSettings, mode: forceMode } : baseSettings;
     let pool = filterCountryPool(this.state.countries, settings);
     if (onlyCountryIds && onlyCountryIds.length) {
       const allowed = new Set(onlyCountryIds);
@@ -283,7 +286,7 @@ class App extends React.Component<any, AppState> {
     }
     const count = onlyCountryIds?.length
       ? Math.min(Math.max(5, onlyCountryIds.length), settings.avoidRepeats ? pool.length : Math.max(5, onlyCountryIds.length))
-      : this.selectedRoundCount(pool.length);
+      : this.selectedRoundCount(pool.length, settings);
     if (pool.length === 0) {
       this.setState({ liveMessage: "Velg minst én verdensdel med tilgjengelige land." });
       return;
@@ -314,6 +317,24 @@ class App extends React.Component<any, AppState> {
       reviewOpen: false,
       liveMessage: "Runden er startet.",
     }, () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  startQuickGame = (mode: "map" | "capitals") => {
+    const settings: GameSettings = {
+      ...this.state.settings,
+      mode,
+      continents: CONTINENTS.map((item) => item.id),
+      includeTerritories: false,
+      transcontinentalAll: true,
+      answerMethod: "choices-3",
+      roundLength: 10,
+      customLength: 10,
+      difficulty: "normal",
+      avoidRepeats: true,
+      showFlagWithCapital: mode === "capitals",
+      autoAdvance: false,
+    };
+    this.startGame(undefined, undefined, settings);
   };
 
   handleInput = (value: string) => {
@@ -424,7 +445,7 @@ class App extends React.Component<any, AppState> {
         country.subregionNb ? `Region: ${country.subregionNb}${neighbors[0] ? `. Naboland: ${neighbors[0]}.` : "."}` : (neighbors[0] ? `Naboland: ${neighbors[0]}.` : "Landet har ingen landegrenser."),
         `Hovedstad: ${country.capitals[0]}.`,
         `Landet begynner på «${country.norwegianName[0]}» og har ${country.norwegianName.replace(/[ -]/g, "").length} bokstaver.`,
-        "shape",
+        step.promptType === "shape" ? "map" : "shape",
       ];
     } else {
       const capital = country.capitals[0];
@@ -544,7 +565,7 @@ class App extends React.Component<any, AppState> {
     const pool = filterCountryPool(countries, settings);
     const roundCount = this.selectedRoundCount(pool.length);
     const modes: Array<{ id: GameMode; icon: string }> = [
-      { id: "flag", icon: "⚑" }, { id: "capitals", icon: "⌂" }, { id: "flag-capital", icon: "⚑⌂" },
+      { id: "flag", icon: "⚑" }, { id: "map", icon: "⌖" }, { id: "capitals", icon: "⌂" }, { id: "flag-capital", icon: "⚑⌂" },
       { id: "combined", icon: "⇥" }, { id: "mixed", icon: "⤨" }, { id: "repetition", icon: "↻" },
     ];
     return (
@@ -566,6 +587,26 @@ class App extends React.Component<any, AppState> {
             <span className="orbit orbit-two"><b>🇯🇵</b></span>
             <span className="orbit orbit-three"><b>🇧🇷</b></span>
           </div>
+        </section>
+
+        <section className="quick-play" aria-labelledby="quick-play-title">
+          <div className="quick-heading">
+            <div><span className="eyebrow">Kom rett i gang</span><h2 id="quick-play-title">Hurtigspill</h2></div>
+            <span>10 spørsmål · hele verden · 3 alternativer · normal</span>
+          </div>
+          <div className="quick-grid">
+            <button className="quick-card" onClick={() => this.startQuickGame("map")}>
+              <span className="quick-icon">⌖</span>
+              <span><strong>Hurtigspill kart</strong><small>Se landets form og finn riktig land.</small></span>
+              <i>→</i>
+            </button>
+            <button className="quick-card" onClick={() => this.startQuickGame("capitals")}>
+              <span className="quick-icon">⌂</span>
+              <span><strong>Hurtigspill hovedsteder</strong><small>Se landet og velg riktig hovedstad.</small></span>
+              <i>→</i>
+            </button>
+          </div>
+          <p className="quick-note">Begge bruker alle verdensdeler, selvstendige stater, 3 svaralternativer, normal vanskelighetsgrad og transkontinentale land i alle relevante områder.</p>
         </section>
 
         <section className="config-shell" aria-labelledby="configure-title">
@@ -653,9 +694,10 @@ class App extends React.Component<any, AppState> {
     return (
       <div className="question-prompt">
         {showFlag && <div className="flag-stage"><img src={country.flagPath} alt={this.state.feedback ? `${country.norwegianName}s flagg` : "Flagg som skal identifiseres"} /></div>}
+        {step.promptType === "shape" && <div className="shape-stage"><Silhouette country={country} concealName /></div>}
         {step.promptType === "country-name" && <div className="country-name-prompt"><span>Land</span><strong>{country.norwegianName}</strong></div>}
         <h1>{step.answerType === "country" ? "Hvilket land er dette?" : "Hva er hovedstaden?"}</h1>
-        <p>{step.answerType === "country" ? "Velg eller skriv inn landet som flagget tilhører." : `Finn hovedstaden i ${country.norwegianName}.`}</p>
+        <p>{step.answerType === "country" ? (step.promptType === "shape" ? "Velg landet som passer til formen." : "Velg eller skriv inn landet som flagget tilhører.") : `Finn hovedstaden i ${country.norwegianName}.`}</p>
       </div>
     );
   }
@@ -702,6 +744,7 @@ class App extends React.Component<any, AppState> {
 
   renderFeedback(country: Country, record: AnswerRecord) {
     const neighborNames = country.borders.map((code) => this.state.countries.find((item) => item.cca3 === code)?.norwegianName).filter(Boolean).slice(0, 5);
+    const areaLabel = Array.from(new Set([...country.continentNames, country.subregionNb].filter(Boolean))).join(" · ");
     return (
       <section className={`feedback-card ${record.correct ? "correct" : "wrong"}`} aria-live="polite">
         <div className="feedback-title">
@@ -714,7 +757,7 @@ class App extends React.Component<any, AppState> {
             <img src={country.flagPath} alt={`${country.norwegianName}s flagg`} />
             <div><span>Land</span><strong>{country.norwegianName}</strong></div>
             <div><span>Hovedstad</span><strong>{country.capitals.join(" / ")}</strong></div>
-            <div><span>Område</span><strong>{country.continentNames.join(" / ")} · {country.subregionNb}</strong></div>
+            <div><span>Område</span><strong>{areaLabel}</strong></div>
             {neighborNames.length > 0 && <div><span>Naboland</span><strong>{neighborNames.join(", ")}</strong></div>}
             {country.capitalNote && <p className="fact-note">{country.capitalNote}</p>}
           </div>
@@ -742,7 +785,7 @@ class App extends React.Component<any, AppState> {
           <div className="game-metrics"><span><b>{this.state.correct}</b> riktige</span><span><b>{this.state.score}</b> poeng</span><span><b>{this.state.streak}</b> på rad</span></div>
         </div>
         <div className="progress-track"><i style={{ width: `${progress}%` }} /></div>
-        <section className="question-shell">
+        <section className={`question-shell ${this.state.feedback && !this.state.feedback.correct ? "wrong-answer" : ""}`}>
           {!this.state.feedback && this.renderPrompt(country, step)}
           {!this.state.feedback && this.renderHints(country)}
           {!this.state.feedback && this.renderAnswerArea(step)}

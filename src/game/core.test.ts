@@ -65,6 +65,12 @@ describe("spørsmål og alternativer", () => {
   it("gir autofullføring fra første bokstav", () => {
     expect(autocompleteValues(pool, "country", "No")).toEqual(["Norge"]);
   });
+  it("lager kartoppgaver som spør etter landet fra landformen", () => {
+    const question = makeQuestion(no, "map", fixedRandom);
+    expect(question.kind).toBe("shape-to-country");
+    expect(question.steps[0].promptType).toBe("shape");
+    expect(question.steps[0].answerType).toBe("country");
+  });
 });
 
 describe("utvalg, poeng og repetisjon", () => {

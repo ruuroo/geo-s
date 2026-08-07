@@ -130,6 +130,9 @@ export function makeQuestion(country: Country, mode: GameMode, random: () => num
   if (mode === "mixed" || mode === "repetition") {
     effectiveMode = (["flag", "capitals", "flag-capital"] as GameMode[])[Math.floor(random() * 3)];
   }
+  if (effectiveMode === "map") {
+    return { id: `${country.id}-${Date.now()}-${random()}`, kind: "shape-to-country", countryId: country.id, steps: [makeStep("shape", "country", country)] };
+  }
   if (effectiveMode === "capitals") {
     return { id: `${country.id}-${Date.now()}-${random()}`, kind: "country-to-capital", countryId: country.id, steps: [makeStep("country-name", "capital", country)] };
   }

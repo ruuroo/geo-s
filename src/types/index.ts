@@ -1,9 +1,9 @@
 export type Continent = "Europe" | "Asia" | "Africa" | "North America" | "South America" | "Oceania";
-export type GameMode = "flag" | "capitals" | "flag-capital" | "combined" | "mixed" | "repetition";
+export type GameMode = "flag" | "map" | "capitals" | "flag-capital" | "combined" | "mixed" | "repetition";
 export type AnswerMethod = "text" | "choices-3" | "choices-5";
 export type Difficulty = "easy" | "normal" | "hard";
 export type AnswerType = "country" | "capital";
-export type PromptType = "flag" | "country-name";
+export type PromptType = "flag" | "shape" | "country-name";
 
 export interface Country {
   id: string;
@@ -52,7 +52,7 @@ export interface QuestionStep {
 
 export interface Question {
   id: string;
-  kind: "flag-to-country" | "country-to-capital" | "flag-to-capital" | "combined-country-and-capital";
+  kind: "flag-to-country" | "shape-to-country" | "country-to-capital" | "flag-to-capital" | "combined-country-and-capital";
   countryId: string;
   steps: QuestionStep[];
 }
