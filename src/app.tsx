@@ -319,7 +319,7 @@ class App extends React.Component<any, AppState> {
     }, () => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
-  startQuickGame = (mode: "map" | "capitals") => {
+  startQuickGame = (mode: "flag" | "map" | "capitals") => {
     const settings: GameSettings = {
       ...this.state.settings,
       mode,
@@ -595,6 +595,11 @@ class App extends React.Component<any, AppState> {
             <span>10 spørsmål · hele verden · 3 alternativer · normal</span>
           </div>
           <div className="quick-grid">
+            <button className="quick-card" onClick={() => this.startQuickGame("flag")}>
+              <span className="quick-icon">⚑</span>
+              <span><strong>Hurtigspill flagg</strong><small>Se flagget og finn riktig land.</small></span>
+              <i>→</i>
+            </button>
             <button className="quick-card" onClick={() => this.startQuickGame("map")}>
               <span className="quick-icon">⌖</span>
               <span><strong>Hurtigspill kart</strong><small>Se landets form og finn riktig land.</small></span>
@@ -606,7 +611,7 @@ class App extends React.Component<any, AppState> {
               <i>→</i>
             </button>
           </div>
-          <p className="quick-note">Begge bruker alle verdensdeler, selvstendige stater, 3 svaralternativer, normal vanskelighetsgrad og transkontinentale land i alle relevante områder.</p>
+          <p className="quick-note">Alle hurtigspill bruker 10 spørsmål, hele verden, selvstendige stater, 3 svaralternativer, normal vanskelighetsgrad og transkontinentale land i alle relevante områder.</p>
         </section>
 
         <section className="config-shell" aria-labelledby="configure-title">
@@ -750,21 +755,25 @@ class App extends React.Component<any, AppState> {
         <div className="feedback-title">
           <span className="feedback-icon">{record.correct ? "✓" : "×"}</span>
           <div><span>{record.correct ? "Riktig svar" : "Riktig svar er"}</span><h2>{record.correctAnswer}</h2><p>{record.correct ? `Du fikk ${record.points} poeng.` : <span>Du svarte <strong>{record.userAnswer || "ingenting"}</strong>.</span>}</p></div>
-          <div className="points-badge">+{record.points}</div>
-        </div>
-        <div className="learning-card">
-          <div className="country-facts">
-            <img src={country.flagPath} alt={`${country.norwegianName}s flagg`} />
-            <div><span>Land</span><strong>{country.norwegianName}</strong></div>
-            <div><span>Hovedstad</span><strong>{country.capitals.join(" / ")}</strong></div>
-            <div><span>Område</span><strong>{areaLabel}</strong></div>
-            {neighborNames.length > 0 && <div><span>Naboland</span><strong>{neighborNames.join(", ")}</strong></div>}
-            {country.capitalNote && <p className="fact-note">{country.capitalNote}</p>}
+          <div className="feedback-controls">
+            <div className="points-badge">+{record.points}</div>
+            <button className="primary next-button" onClick={this.advance}>{this.state.questionIndex + 1 >= this.state.questions.length && this.state.stepIndex + 1 >= this.currentQuestion()!.steps.length ? "Se resultat" : "Neste"} <span>→</span></button>
           </div>
-          <Silhouette country={country} />
         </div>
-        <WorldMap countries={this.state.countries} selected={country} compact />
-        <button className="primary next-button" onClick={this.advance}>{this.state.questionIndex + 1 >= this.state.questions.length && this.state.stepIndex + 1 >= this.currentQuestion()!.steps.length ? "Se resultat" : "Neste"} <span>→</span></button>
+        <div className="feedback-details">
+          <div className="learning-card">
+            <div className="country-facts">
+              <img src={country.flagPath} alt={`${country.norwegianName}s flagg`} />
+              <div><span>Land</span><strong>{country.norwegianName}</strong></div>
+              <div><span>Hovedstad</span><strong>{country.capitals.join(" / ")}</strong></div>
+              <div><span>Område</span><strong>{areaLabel}</strong></div>
+              {neighborNames.length > 0 && <div><span>Naboland</span><strong>{neighborNames.join(", ")}</strong></div>}
+              {country.capitalNote && <p className="fact-note">{country.capitalNote}</p>}
+            </div>
+            <Silhouette country={country} />
+          </div>
+          <WorldMap countries={this.state.countries} selected={country} compact />
+        </div>
       </section>
     );
   }
@@ -786,13 +795,19 @@ class App extends React.Component<any, AppState> {
         </div>
         <div className="progress-track"><i style={{ width: `${progress}%` }} /></div>
         <section className={`question-shell ${this.state.feedback && !this.state.feedback.correct ? "wrong-answer" : ""}`}>
-          {!this.state.feedback && this.renderPrompt(country, step)}
-          {!this.state.feedback && this.renderHints(country)}
-          {!this.state.feedback && this.renderAnswerArea(step)}
           {!this.state.feedback && (
-            <div className="question-actions">
-              <button className="hint-button" disabled={this.state.hints.length >= maxHints} onClick={this.nextHint}>💡 {this.state.hints.length ? `Vis tips ${this.state.hints.length + 1}` : "Vis tips"}<small>Maks {scoreForHints(this.state.hints.length + 1)} poeng etter neste tips</small></button>
-              <span>{totalSteps} svar i denne runden</span>
+            <div className="question-layout">
+              <div className="question-main">
+                {this.renderPrompt(country, step)}
+                {this.renderHints(country)}
+              </div>
+              <div className="answer-panel">
+                {this.renderAnswerArea(step)}
+                <div className="question-actions">
+                  <button className="hint-button" disabled={this.state.hints.length >= maxHints} onClick={this.nextHint}>💡 {this.state.hints.length ? `Vis tips ${this.state.hints.length + 1}` : "Vis tips"}<small>Maks {scoreForHints(this.state.hints.length + 1)} poeng etter neste tips</small></button>
+                  <span>{totalSteps} svar i denne runden</span>
+                </div>
+              </div>
             </div>
           )}
           {this.state.feedback && this.renderFeedback(country, this.state.feedback)}
